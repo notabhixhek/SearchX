@@ -737,9 +737,9 @@ class GoogleDriveHelper:
         try:
             self.telegraph_path.append(
                 acc.create_page(
-                    title="SearchX",
-                    author_name="Levi",
-                    author_url="https://t.me/l3v11",
+                    title="SearchBot",
+                    author_name="Bot",
+                    author_url="tg://settings",
                     html_content=content)['path'])
         except RetryAfterError as err:
             LOGGER.info(f"Cooldown: {err.retry_after} seconds")
@@ -750,9 +750,9 @@ class GoogleDriveHelper:
         try:
             acc.edit_page(
                 path=path,
-                title="SearchX",
-                author_name="Levi",
-                author_url="https://t.me/l3v11",
+                title="SearchBot",
+                author_name="Bot",
+                author_url="tg://settings",
                 html_content=content)
         except RetryAfterError as err:
             LOGGER.info(f"Cooldown: {err.retry_after} seconds")
@@ -824,18 +824,18 @@ class GoogleDriveHelper:
             if add_title_msg:
                 msg = f'<h4>Query: {file_name}</h4><br>'
                 add_title_msg = False
-            msg += f"╾────────────╼<br><b>{DRIVE_NAMES[index]}</b><br>╾────────────╼<br>"
+            msg += f"────────────<br><b>{DRIVE_NAMES[index]}</b><br>────────────<br>"
             # Detect whether the current entity is a folder or a file
             for file in self.response[files]["files"]:
                 if file.get('mimeType') == self.__G_DRIVE_DIR_MIME_TYPE:
-                    msg += f"🗂️<code>{file.get('name')}</code> <b>(folder)</b><br>" \
+                    msg += f"<code>{file.get('name')}</code> <b>(folder)</b><br>" \
                            f"<b><a href='https://drive.google.com/drive/folders/{file.get('id')}'>Drive Link</a></b>"
                     if INDEX_URLS[index] is not None:
                         url_path = requests.utils.quote(f"{file.get('name')}")
                         url = f"{INDEX_URLS[index]}search?q={url_path}"
                         msg += f"<b> | <a href='{url}'>Index Link</a></b>"
                 else:
-                    msg += f"📄<code>{file.get('name')}</code> <b>({get_readable_file_size(int(file.get('size', 0)))})" \
+                    msg += f"<code>{file.get('name')}</code> <b>({get_readable_file_size(int(file.get('size', 0)))})" \
                            f"</b><br><b><a href='https://drive.google.com/uc?id={file.get('id')}" \
                            f"&export=download'>Drive Link</a></b>"
                     if INDEX_URLS[index] is not None:
@@ -860,7 +860,7 @@ class GoogleDriveHelper:
 
             if i != 0:
                 # Add previous page link
-                self.telegraph_content[i] += f'<b><a href="https://graph.org/{self.telegraph_path[i-1]}">Previous</a>' \
+                self.telegraph_content[i] += f'<b><a href="https://te.legra.ph/{self.telegraph_path[i-1]}">Previous</a>' \
                                              f' | Page {i+1}/{total_pages}</b>'
             else:
                 self.telegraph_content[i] += f'<b>Page {i+1}/{total_pages}</b>'
@@ -871,7 +871,7 @@ class GoogleDriveHelper:
 
             if i != 0:
                 # Edit previous page to add next page link
-                self.telegraph_content[i-1] += f'<b> | <a href="https://graph.org/{self.telegraph_path[i]}">Next</a></b>'
+                self.telegraph_content[i-1] += f'<b> | <a href="https://te.legra.ph/{self.telegraph_path[i]}">Next</a></b>'
 
                 self.__edit_page(
                     TELEGRAPH[(acc_no-1) if i % page_per_acc == 0 else acc_no],
@@ -881,5 +881,5 @@ class GoogleDriveHelper:
         msg = f"<b>Found {response_count} results matching '{file_name}' in {len(DRIVE_IDS)} Drives</b> " \
               f"<b>(Time taken {round(time.time() - start_time, 2)}s)</b>"
         button = ButtonMaker()
-        button.build_button("VIEW RESULTS 🗂️", f"https://graph.org/{self.telegraph_path[0]}")
+        button.build_button("VIEW RESULTS", f"https://te.legra.ph/{self.telegraph_path[0]}")
         return msg, button.build_menu(1)

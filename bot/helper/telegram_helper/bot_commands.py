@@ -3,7 +3,7 @@ class __BotCommands:
     def __init__(self):
         self.StartCommand = 'start'
         self.ListCommand = 'find'
-        self.CloneCommand = 'clone'
+        self.CloneCommand = 'copy'
         self.CompressCommand = 'compress'
         self.ExtractCommand = 'extract'
         self.CountCommand = 'count'

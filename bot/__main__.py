@@ -92,9 +92,9 @@ help_string_user = f'''
 '''
 
 help_user = TELEGRAPH[0].create_page(
-    title='SearchX Help',
-    author_name='Levi',
-    author_url='https://t.me/l3v11',
+    title='SearchBot Help',
+    author_name='Bot',
+    author_url='tg://settings',
     html_content=help_string_user)['path']
 
 help_string_admin = f'''
@@ -128,15 +128,15 @@ help_string_admin = f'''
 '''
 
 help_admin = TELEGRAPH[0].create_page(
-    title='SearchX Help',
-    author_name='Levi',
-    author_url='https://t.me/l3v11',
+    title='SearchBot Help',
+    author_name='Bot',
+    author_url='tg://settings',
     html_content=help_string_admin)['path']
 
 def bot_help(update, context):
     button = ButtonMaker()
-    button.build_button("User", f"https://graph.org/{help_user}")
-    button.build_button("Admin", f"https://graph.org/{help_admin}")
+    button.build_button("User", f"https://te.legra.ph/{help_user}")
+    button.build_button("Admin", f"https://te.legra.ph/{help_admin}")
     sendMessage(help_string, context.bot, update.message, button.build_menu(2))
 
 def main():
