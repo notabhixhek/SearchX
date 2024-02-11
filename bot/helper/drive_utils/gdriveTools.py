@@ -739,7 +739,7 @@ class GoogleDriveHelper:
                 acc.create_page(
                     title="SearchBot",
                     author_name="Bot",
-                    author_url="tg://settings",
+                    author_url="https://t.me/AriaSearchBot",
                     html_content=content)['path'])
         except RetryAfterError as err:
             LOGGER.info(f"Cooldown: {err.retry_after} seconds")
@@ -752,7 +752,7 @@ class GoogleDriveHelper:
                 path=path,
                 title="SearchBot",
                 author_name="Bot",
-                author_url="tg://settings",
+                author_url="https://t.me/AriaSearchBot",
                 html_content=content)
         except RetryAfterError as err:
             LOGGER.info(f"Cooldown: {err.retry_after} seconds")

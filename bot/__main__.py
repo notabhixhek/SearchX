@@ -94,7 +94,7 @@ help_string_user = f'''
 help_user = TELEGRAPH[0].create_page(
     title='SearchBot Help',
     author_name='Bot',
-    author_url='tg://settings',
+    author_url='https://t.me/AriaSearchBot',
     html_content=help_string_user)['path']
 
 help_string_admin = f'''
@@ -130,7 +130,7 @@ help_string_admin = f'''
 help_admin = TELEGRAPH[0].create_page(
     title='SearchBot Help',
     author_name='Bot',
-    author_url='tg://settings',
+    author_url='https://t.me/AriaSearchBot',
     html_content=help_string_admin)['path']
 
 def bot_help(update, context):
