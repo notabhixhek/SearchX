@@ -1,4 +1,5 @@
 import time
+import threading
 
 from telegram.error import RetryAfter
 
@@ -6,11 +7,30 @@ from bot import bot, LOGGER, Interval, STATUS_UPDATE_INTERVAL, \
     status_reply_dict, status_reply_dict_lock
 from bot.helper.ext_utils.bot_utils import SetInterval, get_readable_message
 
-def sendMessage(text, bot, message, reply_markup=None):
+
+def delete_user_message(bot, message, delay):
+    time.sleep(delay)
+    deleteMessage(bot, message)
+
+def delete_bot_message(bot, sent_message, delay):
+    time.sleep(delay)
+    deleteMessage(bot, sent_message)
+
+def sendMessage(text, bot, message, reply_markup=None, user_delete_delay=60, bot_delete_delay=120):
     try:
-        return bot.sendMessage(chat_id=message.chat_id,
-                               reply_to_message_id=message.message_id,
-                               text=text, reply_markup=reply_markup)
+        sent_message = bot.sendMessage(chat_id=message.chat_id,
+                                       reply_to_message_id=message.message_id,
+                                       text=text, reply_markup=reply_markup)
+
+        # Schedule deletion of user's message
+        user_delete_thread = threading.Thread(target=delete_user_message, args=(bot, message, user_delete_delay))
+        user_delete_thread.start()
+
+        # Schedule deletion of bot's message
+        bot_delete_thread = threading.Thread(target=delete_bot_message, args=(bot, sent_message, bot_delete_delay))
+        bot_delete_thread.start()
+
+        return sent_message
     except RetryAfter as r:
         LOGGER.warning(str(r))
         time.sleep(r.retry_after * 1.5)
