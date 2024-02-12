@@ -8,7 +8,7 @@ class __BotCommands:
         self.ExtractCommand = 'extract'
         self.CountCommand = 'count'
         self.CancelCommand = 'cancel'
-        self.StatusCommand = 'status'
+        self.StatusCommand = 'tasks'
         self.PermissionCommand = 'share'
         self.DeleteCommand = 'del'
         self.AddBookmarkCommand = 'addbm'
