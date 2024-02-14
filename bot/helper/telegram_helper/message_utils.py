@@ -9,22 +9,37 @@ from bot.helper.ext_utils.bot_utils import SetInterval, get_readable_message
 
 
 def delete_user_message(bot, message, delay):
+    """
+    Delete user's message after a specified delay.
+    """
     time.sleep(delay)
     deleteMessage(bot, message)
 
 def delete_bot_message(bot, sent_message, delay):
+    """
+    Delete bot's message after a specified delay.
+    """
     time.sleep(delay)
     deleteMessage(bot, sent_message)
 
 def sendMessage(text, bot, message, reply_markup=None, user_delete_delay=60, bot_delete_delay=120):
+    """
+    Send a message and schedule deletion of user's and bot's messages based on the chat type.
+    """
     try:
+        if message.chat.type == "private":
+            # For direct messages to the bot, do not schedule message deletions
+            return bot.sendMessage(chat_id=message.chat_id,
+                                    reply_to_message_id=message.message_id,
+                                    text=text, reply_markup=reply_markup)
+
+        # For group messages, schedule deletion of user's message
+        user_delete_thread = threading.Thread(target=delete_user_message, args=(bot, message, user_delete_delay))
+        user_delete_thread.start()
+
         sent_message = bot.sendMessage(chat_id=message.chat_id,
                                        reply_to_message_id=message.message_id,
                                        text=text, reply_markup=reply_markup)
-
-        # Schedule deletion of user's message
-        user_delete_thread = threading.Thread(target=delete_user_message, args=(bot, message, user_delete_delay))
-        user_delete_thread.start()
 
         # Schedule deletion of bot's message
         bot_delete_thread = threading.Thread(target=delete_bot_message, args=(bot, sent_message, bot_delete_delay))
@@ -32,32 +47,38 @@ def sendMessage(text, bot, message, reply_markup=None, user_delete_delay=60, bot
 
         return sent_message
     except RetryAfter as r:
-        LOGGER.warning(str(r))
+        LOGGER.warning(f"RetryAfter exception: {r}")
         time.sleep(r.retry_after * 1.5)
         return sendMessage(text, bot, message, reply_markup)
     except Exception as err:
-        LOGGER.error(str(err))
+        LOGGER.error(f"Error sending message: {err}")
         return
 
 def editMessage(text, message, reply_markup=None):
+    """
+    Edit an existing message.
+    """
     try:
         bot.editMessageText(chat_id=message.chat.id,
                             message_id=message.message_id,
                             text=text, reply_markup=reply_markup)
     except RetryAfter as r:
-        LOGGER.warning(str(r))
+        LOGGER.warning(f"RetryAfter exception: {r}")
         time.sleep(r.retry_after * 1.5)
         return editMessage(text, message, reply_markup)
     except Exception as err:
-        LOGGER.error(str(err))
-        return str(err)
+        LOGGER.error(f"Error editing message: {err}")
+        return
 
 def deleteMessage(bot, message):
+    """
+    Delete a message.
+    """
     try:
         bot.deleteMessage(chat_id=message.chat.id,
                           message_id=message.message_id)
-    except:
-        pass
+    except Exception as e:
+        LOGGER.error(f"Error deleting message: {e}")
 
 def sendLogFile(bot, message):
     with open('log.txt', 'rb') as f:
