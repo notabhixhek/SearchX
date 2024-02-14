@@ -22,7 +22,7 @@ def delete_bot_message(bot, sent_message, delay):
     time.sleep(delay)
     deleteMessage(bot, sent_message)
 
-def sendMessage(text, bot, message, reply_markup=None, user_delete_delay=60, bot_delete_delay=120):
+def sendMessage(text, bot, message, reply_markup=None, user_delete_delay=120, bot_delete_delay=1800):
     """
     Send a message and schedule deletion of user's and bot's messages based on the chat type.
     """
